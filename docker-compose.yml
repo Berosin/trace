@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - GROQ_MODEL=${GROQ_MODEL:-llama-3.3-70b-versatile}
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_PROXY_TARGET=http://server:4000
+    depends_on:
+      - server
+    volumes:
+      - ./client:/app
+      - /app/node_modules
