@@ -1,4 +1,4 @@
-import { Terminal } from "lucide-react";
+import { TraceLogo } from "./TraceLogo";
 
 interface Props {
   className?: string;
@@ -7,14 +7,14 @@ interface Props {
 }
 
 /**
- * The signature mark: a terminal glyph + tracked-out monospace wordmark.
- * No illustration — brutalist branding is typographic.
+ * The signature mark: the TRACE logo (your original artwork, background
+ * removed, recolored to ink/accent) + tracked-out monospace wordmark.
  */
 export function BrandMark({ className, compact }: Props) {
   if (compact) {
     return (
       <div className={`flex items-center gap-2 ${className ?? ""}`}>
-        <Terminal size={16} strokeWidth={1.75} className="text-ink" />
+        <TraceLogo size={18} />
         <span className="text-xs font-mono font-bold tracking-[0.15em] uppercase text-ink">TRACE</span>
       </div>
     );
@@ -23,7 +23,7 @@ export function BrandMark({ className, compact }: Props) {
   return (
     <div className={className}>
       <div className="flex items-center gap-3 border-2 border-ink px-4 py-3 bg-panel w-fit">
-        <Terminal size={22} strokeWidth={1.5} className="text-ink" />
+        <TraceLogo size={30} />
         <span className="text-lg font-mono font-bold tracking-[0.15em] uppercase text-ink">TRACE</span>
         <span className="h-2 w-2 bg-accent animate-blink" />
       </div>
