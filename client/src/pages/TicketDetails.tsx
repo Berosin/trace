@@ -14,7 +14,6 @@ import {
 import { useStore } from "../hooks/StoreContext";
 import { api } from "../services/api";
 import { StatusBadge, AgentPill, ConfidenceMeter, SectionLabel } from "../components/Atoms";
-import { DutchDoor } from "../components/DutchDoor";
 import { LedgerEntry } from "../types";
 
 const ACTOR_LABEL: Record<string, string> = {
@@ -47,10 +46,10 @@ export function TicketDetails() {
   if (!ticket) {
     return (
       <div className="px-10 py-8">
-        <Link to="/tickets" className="text-sm text-delft inline-flex items-center gap-1.5 mb-4">
+        <Link to="/tickets" className="text-sm text-accent inline-flex items-center gap-1.5 mb-4 font-mono uppercase tracking-wide">
           <ArrowLeft size={14} /> Back to tickets
         </Link>
-        <p className="text-ink/60">Ticket not found (or still loading).</p>
+        <p className="text-muted">Ticket not found (or still loading).</p>
       </div>
     );
   }
@@ -73,15 +72,15 @@ export function TicketDetails() {
 
   return (
     <div className="px-10 py-8 max-w-5xl">
-      <Link to="/tickets" className="text-sm text-delft inline-flex items-center gap-1.5 mb-4 hover:underline">
+      <Link to="/tickets" className="text-xs text-accent inline-flex items-center gap-1.5 mb-4 hover:underline font-mono uppercase tracking-wide">
         <ArrowLeft size={14} /> Back to tickets
       </Link>
 
       <div className="flex items-start justify-between gap-6 mb-6">
         <div>
-          <p className="font-mono text-xs text-delft">{ticket.shortId}</p>
-          <h1 className="font-display text-2xl text-ink mt-0.5">{ticket.subject}</h1>
-          <p className="text-sm text-ink/50 mt-1">
+          <p className="font-mono text-xs text-accent">{ticket.shortId}</p>
+          <h1 className="font-mono text-2xl font-bold text-ink mt-0.5 tracking-tight">{ticket.subject}</h1>
+          <p className="text-sm text-muted mt-1">
             {ticket.customer} · via {ticket.channel.replace("_", " ")}
           </p>
         </div>
@@ -92,9 +91,9 @@ export function TicketDetails() {
       </div>
 
       {ticket.status === "agent_crashed" && (
-        <div className="mb-6 rounded-xl border border-rust/30 bg-rust/5 px-4 py-3 flex items-center gap-3">
-          <Skull size={18} className="text-rust shrink-0" />
-          <p className="text-sm text-rust">
+        <div className="mb-6 border-2 border-danger bg-danger/5 px-4 py-3 flex items-center gap-3">
+          <Skull size={18} className="text-danger shrink-0" />
+          <p className="text-sm text-danger">
             The L2 agent crashed mid-investigation. Diagnostic state below is intact in the ledger — start a
             replacement agent to resume, not restart.
           </p>
@@ -102,12 +101,12 @@ export function TicketDetails() {
       )}
 
       {incident && (
-        <div className="mb-6 rounded-xl border border-door-light bg-door-light/20 px-4 py-3 flex items-center justify-between">
-          <p className="text-sm text-delft">
-            Part of root incident <span className="font-mono">{incident.shortId}</span> — "{incident.title}" (
+        <div className="mb-6 border-2 border-ink bg-panel px-4 py-3 flex items-center justify-between">
+          <p className="text-sm text-ink">
+            Part of root incident <span className="font-mono text-accent">{incident.shortId}</span> — "{incident.title}" (
             {incident.ticketIds.length} linked ticket{incident.ticketIds.length === 1 ? "" : "s"})
           </p>
-          <Link to="/incidents" className="text-xs text-delft hover:underline shrink-0">
+          <Link to="/incidents" className="text-xs text-accent hover:underline shrink-0 font-mono uppercase tracking-wide">
             View incident
           </Link>
         </div>
@@ -115,11 +114,11 @@ export function TicketDetails() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Diagnostic state */}
-        <div className="rounded-2xl border border-door-light bg-white shadow-panel p-5">
-          <SectionLabel>Diagnostic state</SectionLabel>
+        <div className="border-2 border-ink bg-panel shadow-panel p-5">
+          <SectionLabel index="A">Diagnostic state</SectionLabel>
 
           <Field label="Original message">
-            <p className="text-sm text-ink/75 italic leading-relaxed">"{ticket.rawMessage}"</p>
+            <p className="text-sm text-ink/80 italic leading-relaxed">"{ticket.rawMessage}"</p>
           </Field>
 
           <Field label="Entities">
@@ -128,8 +127,8 @@ export function TicketDetails() {
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {ds.entities.map((e, i) => (
-                  <span key={i} className="font-mono text-xs bg-linen border border-door-light rounded-full px-2.5 py-1 text-ink/70">
-                    {e.type}: <span className="text-delft">{e.value}</span>
+                  <span key={i} className="font-mono text-xs bg-paper border border-ink px-2 py-1 text-ink/80">
+                    {e.type}: <span className="text-accent">{e.value}</span>
                   </span>
                 ))}
               </div>
@@ -144,15 +143,15 @@ export function TicketDetails() {
                 {ds.hypotheses.map((h) => (
                   <li key={h.id} className="flex items-start gap-2 text-sm">
                     {h.status === "ruled_out" ? (
-                      <CircleX size={15} className="text-rust/70 mt-0.5 shrink-0" />
+                      <CircleX size={15} className="text-danger/70 mt-0.5 shrink-0" />
                     ) : h.status === "confirmed" ? (
-                      <CircleCheck size={15} className="text-leaf mt-0.5 shrink-0" />
+                      <CircleCheck size={15} className="text-success mt-0.5 shrink-0" />
                     ) : (
-                      <CircleDot size={15} className="text-amber mt-0.5 shrink-0" />
+                      <CircleDot size={15} className="text-warning mt-0.5 shrink-0" />
                     )}
                     <span
                       className={
-                        h.status === "ruled_out" ? "text-ink/40 line-through" : h.status === "confirmed" ? "text-leaf font-medium" : "text-ink/80"
+                        h.status === "ruled_out" ? "text-ink/40 line-through" : h.status === "confirmed" ? "text-success font-medium" : "text-ink/85"
                       }
                     >
                       {h.text}
@@ -169,9 +168,9 @@ export function TicketDetails() {
             ) : (
               <ul className="space-y-2">
                 {ds.evidence.map((e) => (
-                  <li key={e.id} className="text-sm border-l-2 border-door-deep/40 pl-2.5">
-                    <p className="text-ink/80">{e.summary}</p>
-                    <p className="text-xs text-ink/40 font-mono mt-0.5">
+                  <li key={e.id} className="text-sm border-l-2 border-ink pl-2.5">
+                    <p className="text-ink/85">{e.summary}</p>
+                    <p className="text-xs text-muted font-mono mt-0.5">
                       {e.source} · {ACTOR_LABEL[e.collectedBy]}
                     </p>
                   </li>
@@ -187,8 +186,8 @@ export function TicketDetails() {
               <ul className="space-y-2">
                 {ds.actionsAttempted.map((a) => (
                   <li key={a.id} className="text-sm">
-                    <p className="text-ink/80 font-medium">{a.action}</p>
-                    <p className="text-ink/55">{a.result}</p>
+                    <p className="text-ink/85 font-medium">{a.action}</p>
+                    <p className="text-muted">{a.result}</p>
                   </li>
                 ))}
               </ul>
@@ -200,31 +199,31 @@ export function TicketDetails() {
           </Field>
 
           <Field label="Next recommended action">
-            <p className="text-sm text-delft flex items-center gap-1.5">
+            <p className="text-sm text-accent flex items-center gap-1.5">
               <ArrowRightCircle size={15} /> {ds.nextRecommendedAction}
             </p>
           </Field>
 
           {ticket.resolvedSummary && (
             <Field label="Resolution / root cause">
-              <p className="text-sm text-leaf leading-relaxed">{ticket.resolvedSummary}</p>
+              <p className="text-sm text-success leading-relaxed">{ticket.resolvedSummary}</p>
             </Field>
           )}
         </div>
 
         {/* Ledger timeline + actions */}
         <div className="space-y-6">
-          <div className="rounded-2xl border border-door-light bg-white shadow-panel p-5">
-            <SectionLabel>Agent controls</SectionLabel>
-            <p className="text-xs text-ink/45 mb-3 leading-relaxed">
+          <div className="border-2 border-ink bg-panel shadow-panel p-5">
+            <SectionLabel index="B">Agent controls</SectionLabel>
+            <p className="text-xs text-muted mb-3 leading-relaxed">
               Each button below triggers one real inference call — the agent reasons over this ticket's actual
               diagnostic state and returns a genuine result. Nothing here is pre-scripted, so responses take a
               couple of seconds and will differ every time you run it.
             </p>
-            {error && <p className="text-xs text-rust mb-2">{error}</p>}
+            {error && <p className="text-xs text-danger mb-2">{error}</p>}
             {busy && (
-              <p className="text-xs text-delft mb-2 flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-door-deep animate-pulse" />
+              <p className="text-xs text-accent mb-2 flex items-center gap-1.5 font-mono">
+                <span className="h-1.5 w-1.5 bg-accent animate-blink" />
                 {busyLabel} is thinking…
               </p>
             )}
@@ -267,26 +266,22 @@ export function TicketDetails() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-door-light bg-white shadow-panel p-5">
-            <SectionLabel>Provenance ledger</SectionLabel>
+          <div className="border-2 border-ink bg-panel shadow-panel p-5">
+            <SectionLabel index="C">Provenance ledger</SectionLabel>
             <ol className="space-y-3 max-h-[520px] overflow-y-auto pr-1 scrollbar-thin">
               {ledger.map((entry) => (
-                <li key={entry.id} className="text-xs border-l-2 border-door-light pl-3 relative">
-                  <span className="absolute -left-[5px] top-1 h-2 w-2 rounded-full bg-door-deep" />
-                  <p className="font-mono text-[10px] text-ink/35">
+                <li key={entry.id} className="text-xs border-l-2 border-ink pl-3 relative">
+                  <span className="absolute -left-[5px] top-1 h-2 w-2 bg-accent" />
+                  <p className="font-mono text-[10px] text-muted">
                     #{entry.seq} · {new Date(entry.at).toLocaleTimeString()} · {ACTOR_LABEL[entry.actor] ?? entry.actor}
                   </p>
-                  <p className="text-ink/75 mt-0.5 leading-snug">{entry.summary}</p>
+                  <p className="text-ink/85 mt-0.5 leading-snug">{entry.summary}</p>
                 </li>
               ))}
-              {ledger.length === 0 && <p className="text-xs text-ink/40">No ledger entries yet.</p>}
+              {ledger.length === 0 && <p className="text-xs text-muted">No ledger entries yet.</p>}
             </ol>
           </div>
         </div>
-      </div>
-
-      <div className="mt-10 flex justify-center opacity-30">
-        <DutchDoor compact className="h-10 w-10" />
       </div>
     </div>
   );
@@ -295,7 +290,7 @@ export function TicketDetails() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mb-4 last:mb-0">
-      <p className="text-[11px] uppercase tracking-wide text-ink/40 mb-1.5">{label}</p>
+      <p className="text-[10px] uppercase tracking-[0.15em] text-muted mb-1.5">{label}</p>
       {children}
     </div>
   );
@@ -316,13 +311,14 @@ function ActionButton({
   disabled?: boolean;
   variant?: "danger" | "success";
 }) {
-  const base = "inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed";
+  const base =
+    "inline-flex items-center gap-1.5 border px-3.5 py-2 text-[11px] font-mono uppercase tracking-wide font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed";
   const variantClass =
     variant === "danger"
-      ? "bg-rust/10 text-rust hover:bg-rust/20"
+      ? "border-danger text-danger hover:bg-danger hover:text-paper"
       : variant === "success"
-      ? "bg-leaf/10 text-leaf hover:bg-leaf/20"
-      : "bg-door-light/50 text-delft hover:bg-door-light";
+      ? "border-success text-success hover:bg-success hover:text-paper"
+      : "border-ink text-ink hover:bg-ink hover:text-paper";
   return (
     <button className={`${base} ${variantClass}`} onClick={onClick} disabled={disabled}>
       {children}

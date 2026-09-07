@@ -8,9 +8,9 @@ export function Incidents() {
 
   return (
     <div className="px-10 py-8 max-w-5xl">
-      <SectionLabel>Correlation</SectionLabel>
-      <h1 className="font-display text-2xl text-ink mb-2">Root incidents</h1>
-      <p className="text-sm text-ink/55 mb-6 max-w-xl">
+      <SectionLabel index="002">Correlation</SectionLabel>
+      <h1 className="font-mono text-2xl font-bold text-ink mb-2 tracking-tight">Root incidents</h1>
+      <p className="text-sm text-muted mb-6 max-w-xl">
         When several tickets share a root cause, the correlation agent links them here instead of letting separate
         agents investigate the same problem twice.
       </p>
@@ -24,18 +24,18 @@ export function Incidents() {
               .map((id) => tickets.find((t) => t.id === id))
               .filter((t): t is NonNullable<typeof t> => Boolean(t));
             return (
-              <div key={incident.id} className="rounded-2xl border border-door-light bg-white shadow-panel overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-4 bg-linen/50 border-b border-door-light">
+              <div key={incident.id} className="border-2 border-ink bg-panel shadow-panel overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 bg-paper border-b-2 border-ink">
                   <div className="flex items-center gap-2.5">
-                    <GitMerge size={17} className="text-door-deep" />
+                    <GitMerge size={17} className="text-accent" />
                     <div>
-                      <p className="font-mono text-xs text-delft">{incident.shortId}</p>
-                      <p className="font-display text-base text-ink">{incident.title}</p>
+                      <p className="font-mono text-xs text-accent">{incident.shortId}</p>
+                      <p className="font-mono text-base font-bold text-ink">{incident.title}</p>
                     </div>
                   </div>
                   <span
-                    className={`text-xs font-medium rounded-full px-3 py-1 border ${
-                      incident.status === "resolved" ? "bg-leaf/10 text-leaf border-leaf/30" : "bg-amber/10 text-amber border-amber/30"
+                    className={`text-[10px] font-mono uppercase tracking-wide font-bold px-3 py-1 border ${
+                      incident.status === "resolved" ? "bg-success/10 text-success border-success" : "bg-warning/10 text-warning border-warning"
                     }`}
                   >
                     {incident.status === "resolved" ? "Resolved" : "Open"}
@@ -43,24 +43,24 @@ export function Incidents() {
                 </div>
 
                 {incident.rootCause && (
-                  <div className="px-5 pt-4 text-sm text-leaf leading-relaxed">
-                    <span className="uppercase text-[11px] tracking-wide text-ink/40 block mb-1">Confirmed root cause</span>
+                  <div className="px-5 pt-4 text-sm text-success leading-relaxed">
+                    <span className="uppercase text-[10px] tracking-[0.15em] text-muted block mb-1">Confirmed root cause</span>
                     {incident.rootCause}
                   </div>
                 )}
 
                 <div className="px-5 py-4 space-y-2">
-                  <span className="uppercase text-[11px] tracking-wide text-ink/40 block mb-1">
+                  <span className="uppercase text-[10px] tracking-[0.15em] text-muted block mb-1">
                     {members.length} linked ticket{members.length === 1 ? "" : "s"} — investigated once, not {members.length} times
                   </span>
                   {members.map((t) => (
                     <Link
                       key={t.id}
                       to={`/tickets/${t.id}`}
-                      className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-linen/50 transition-colors"
+                      className="flex items-center justify-between px-3 py-2 hover:bg-paper transition-colors border border-transparent hover:border-ink/20"
                     >
-                      <p className="text-sm text-ink">
-                        <span className="font-mono text-delft mr-2">{t.shortId}</span>
+                      <p className="text-sm text-ink font-mono">
+                        <span className="text-accent mr-2">{t.shortId}</span>
                         {t.subject}
                       </p>
                       <StatusBadge status={t.status} />

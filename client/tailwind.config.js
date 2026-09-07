@@ -4,30 +4,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        porcelain: "#FCFAF5",
-        linen: "#F6F1E6",
-        ink: "#1F3B4D",
-        delft: "#2E6B8A",
-        door: {
-          light: "#BFE1EE",
-          DEFAULT: "#7FB8D6",
-          deep: "#4A93B8",
-        },
-        peony: "#D85D91",
-        leaf: "#4F7A55",
-        amber: "#C4883A",
-        rust: "#B5522F",
+        paper: "#EFEBDD", // page background
+        panel: "#F6F3E7", // card / panel background
+        ink: "#121210", // primary text, borders, strong elements
+        muted: "#6B675C", // secondary text
+        accent: "#EA580C", // orange — brand, links, active states, ticket IDs
+        success: "#3F7D4A",
+        warning: "#B8860B",
+        danger: "#DC2626",
       },
       fontFamily: {
-        display: ["\"Fraunces\"", "serif"],
-        body: ["\"Inter\"", "sans-serif"],
-        mono: ["\"IBM Plex Mono\"", "monospace"],
+        // kept the token names "display"/"body" used throughout the app so
+        // existing className usages don't need to change — both now resolve
+        // to the brutalist mono stack.
+        display: ['"JetBrains Mono"', "monospace"],
+        body: ['"JetBrains Mono"', "monospace"],
+        mono: ['"JetBrains Mono"', "monospace"],
       },
       boxShadow: {
-        panel: "0 1px 2px rgba(31,59,77,0.06), 0 8px 24px -12px rgba(31,59,77,0.18)",
+        // hard brutalist offset shadow — no blur, just an offset duplicate.
+        panel: "4px 4px 0 0 #121210",
+        "panel-sm": "3px 3px 0 0 #121210",
       },
       backgroundImage: {
-        "door-glass": "linear-gradient(180deg, #DCEFF5 0%, #BFE1EE 100%)",
+        "dot-grid": "radial-gradient(circle, #c9c4b0 1px, transparent 1px)",
+      },
+      backgroundSize: {
+        "dot-grid": "22px 22px",
       },
     },
   },

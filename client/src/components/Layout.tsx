@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { LayoutDashboard, Inbox, GitMerge, ScrollText, Radio } from "lucide-react";
-import { DutchDoor } from "./DutchDoor";
+import { BrandMark } from "./BrandMark";
 import { useStore } from "../hooks/StoreContext";
 
 const NAV = [
@@ -14,18 +14,13 @@ export function Layout() {
   const { connected } = useStore();
 
   return (
-    <div className="min-h-screen bg-porcelain flex">
-      <aside className="w-64 shrink-0 border-r border-door-light bg-linen/70 flex flex-col">
+    <div className="min-h-screen bg-paper flex">
+      <aside className="w-64 shrink-0 border-r-2 border-ink bg-panel flex flex-col">
         <div className="px-5 pt-6 pb-4">
-          <div className="flex items-center gap-2.5">
-            <DutchDoor compact className="h-9 w-9" />
-            <div>
-              <p className="font-display text-lg leading-none text-delft">TRACE</p>
-              <p className="text-[11px] tracking-wide text-ink/50 mt-0.5">Reasoning Continuity Engine</p>
-            </div>
-          </div>
+          <BrandMark compact />
+          <p className="text-[10px] tracking-[0.15em] uppercase text-muted mt-1.5">Reasoning Continuity Engine</p>
         </div>
-        <div className="floral-rule mx-5" />
+        <div className="section-rule mx-5 opacity-20" />
 
         <nav className="flex-1 px-3 py-4 space-y-1">
           {NAV.map(({ to, label, icon: Icon, end }) => (
@@ -34,24 +29,28 @@ export function Layout() {
               to={to}
               end={end}
               className={({ isActive }) =>
-                `flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                  isActive ? "bg-door/35 text-delft" : "text-ink/65 hover:bg-door-light/40 hover:text-delft"
+                `flex items-center gap-2.5 px-3 py-2 text-xs font-mono uppercase tracking-wide font-medium transition-colors border ${
+                  isActive
+                    ? "bg-ink text-paper border-ink"
+                    : "text-ink/70 border-transparent hover:border-ink/30 hover:bg-paper"
                 }`
               }
             >
-              <Icon size={17} strokeWidth={2} />
+              <Icon size={15} strokeWidth={2} />
               {label}
             </NavLink>
           ))}
         </nav>
 
-        <div className="px-5 py-4 border-t border-door-light">
-          <div className="flex items-center gap-2 text-xs text-ink/55">
-            <Radio size={13} className={connected ? "text-leaf" : "text-rust"} />
-            {connected ? "Live" : "Reconnecting…"}
+        <div className="px-5 py-4 border-t-2 border-ink">
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-wide text-muted">
+            <Radio size={12} className={connected ? "text-success" : "text-danger"} />
+            {connected ? "LIVE" : "RECONNECTING…"}
           </div>
-          <p className="mt-2 text-[11px] leading-snug text-ink/45 italic font-display">
-            "Don't just pass the ticket. Pass the reasoning."
+          <p className="mt-2 text-[10px] leading-snug text-muted font-mono">
+            {"// don't just pass the ticket."}
+            <br />
+            {"// pass the reasoning."}
           </p>
         </div>
       </aside>
