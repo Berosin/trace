@@ -32,6 +32,7 @@ export function createTicket(input: {
     incidentId: null,
     diagnosticState: emptyState,
     assignedAgent: null,
+    resolvedByAgent: null,
     createdAt: now,
     updatedAt: now,
   };

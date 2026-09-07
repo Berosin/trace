@@ -258,9 +258,14 @@ export async function resolveTicket(ticketId: string): Promise<Ticket> {
   const currentHyp = t.diagnosticState.hypotheses.find((h) => h.id === t.diagnosticState.currentHypothesisId);
   if (currentHyp) currentHyp.status = "confirmed";
 
+  // Remember who actually did the work before we clear assignedAgent — this
+  // is what the UI shows in place of "unassigned" once a ticket is resolved.
+  const resolvingAgent = t.assignedAgent ?? "l2_specialist";
+
   const resolved = update(ticketId, (ticket) => {
     ticket.status = "resolved";
     ticket.assignedAgent = null;
+    ticket.resolvedByAgent = resolvingAgent;
     ticket.resolvedSummary = rootCause;
     ticket.diagnosticState.nextRecommendedAction = "None — resolved";
   });
@@ -268,7 +273,7 @@ export async function resolveTicket(ticketId: string): Promise<Ticket> {
   ledger.record({
     ticketId: t.id,
     type: "resolved",
-    actor: t.assignedAgent === "recovery" ? "recovery" : "l2_specialist",
+    actor: resolvingAgent,
     summary: `Resolved. Root cause: ${rootCause}`,
   });
 
@@ -287,6 +292,8 @@ export async function resolveTicket(ticketId: string): Promise<Ticket> {
         if (sibling && sibling.status !== "resolved") {
           update(siblingId, (s) => {
             s.status = "resolved";
+            s.assignedAgent = null;
+            s.resolvedByAgent = "correlation";
             s.resolvedSummary = `Resolved via shared root cause identified on ${resolved.shortId}: ${rootCause}`;
           });
           ledger.record({

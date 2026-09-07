@@ -112,6 +112,7 @@ export interface Ticket {
   incidentId: string | null;
   diagnosticState: DiagnosticState;
   assignedAgent: AgentRole | null;
+  resolvedByAgent: AgentRole | null;
   createdAt: string;
   updatedAt: string;
   resolvedSummary?: string;
