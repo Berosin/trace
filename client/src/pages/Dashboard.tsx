@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { GitMerge, RefreshCw, Waypoints } from "lucide-react";
-import { BrandMark } from "../components/BrandMark";
+import { ArrowRight, GitMerge, RefreshCw, Waypoints } from "lucide-react";
 import { useStore } from "../hooks/StoreContext";
 import { StatusBadge } from "../components/Atoms";
+import { WorkflowHub } from "../components/WorkflowHub";
 
 const VALUE_PROPS = [
   {
@@ -37,33 +37,35 @@ export function Dashboard() {
 
   return (
     <div>
-      <header className="relative overflow-hidden border-b-2 border-ink dot-grid-bg px-10 py-12">
-        <div className="relative z-10 max-w-3xl">
-          <span className="text-[10px] tracking-[0.2em] uppercase text-muted">// ticket_reasoning_engine.boot</span>
-          <div className="mt-4 mb-6">
-            <BrandMark />
+      <header className="relative overflow-hidden border-b-2 border-ink dot-grid-bg px-10 py-16 text-center">
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <h1 className="dot-text text-[2.75rem] sm:text-[3.5rem]">Triage. Correlate.</h1>
+
+          <div className="my-8">
+            <WorkflowHub
+              leftLabels={["Triage", "Correlate", "Escalate"]}
+              rightLabels={["Investigate", "Recover", "Resolve"]}
+            />
           </div>
-          <h1 className="font-mono text-4xl font-bold leading-[1.15] text-ink tracking-tight">
-            Don't just pass the ticket.
-            <br />
-            <span className="text-accent">Pass the reasoning.</span>
-          </h1>
-          <p className="mt-4 text-muted max-w-md leading-relaxed text-sm">
-            When the agent stops, the investigation doesn't. TRACE preserves diagnostic state — not just
-            conversation history — across every handoff, correlation, and crash.
+
+          <h1 className="dot-text text-[2.75rem] sm:text-[3.5rem]">Resolve.</h1>
+
+          <p className="mt-6 text-muted max-w-lg mx-auto leading-relaxed text-sm">
+            TRACE is the reasoning continuity layer between your support agents and your customers.
+            Structured handoffs. Cross-ticket correlation. Crash-proof investigations.
           </p>
-          <div className="mt-6 flex gap-3">
-            <Link
-              to="/tickets"
-              className="border-2 border-ink bg-ink text-paper px-5 py-2.5 text-xs font-mono uppercase tracking-wide font-bold hover:bg-accent hover:border-accent transition-colors"
-            >
-              File a ticket &amp; investigate it
+
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <Link to="/tickets" className="inline-flex border-2 border-ink group">
+              <span className="bg-accent group-hover:bg-ink flex items-center justify-center px-4 border-r-2 border-ink transition-colors">
+                <ArrowRight size={16} className="text-paper" />
+              </span>
+              <span className="bg-ink text-paper px-5 py-3 text-xs font-mono uppercase tracking-wide font-bold">
+                File a ticket
+              </span>
             </Link>
-            <Link
-              to="/ledger"
-              className="border-2 border-ink text-ink px-5 py-2.5 text-xs font-mono uppercase tracking-wide font-bold hover:bg-panel transition-colors"
-            >
-              View provenance ledger
+            <Link to="/ledger" className="text-xs text-muted hover:text-accent font-mono uppercase tracking-wide">
+              or view the provenance ledger →
             </Link>
           </div>
         </div>

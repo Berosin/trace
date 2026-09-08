@@ -119,3 +119,21 @@ body {
 .animate-logo-pulse {
   animation: logo-pulse 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 1;
 }
+
+/* --- Dot-matrix headline type -----------------------------------------
+   Letterforms built from a dot pattern instead of solid strokes, matching
+   the reference landing page's scoreboard/departure-board typographic
+   style. Achieved by clipping a radial-gradient dot field to the text. */
+.dot-text {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  background-image: radial-gradient(circle, #121210 1.5px, transparent 1.5px);
+  background-size: 4.5px 4.5px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
