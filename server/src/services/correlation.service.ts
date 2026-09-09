@@ -1,4 +1,4 @@
-import { listOpenIncidents, getTicket, saveIncident, nextIncidentShortId } from "../data/store";
+import { listOpenIncidents, saveIncident, nextIncidentShortId } from "../data/store";
 import { Ticket, Incident, Entity } from "../types/domain";
 import { v4 as uuid } from "uuid";
 import { bus } from "./bus";
@@ -49,8 +49,11 @@ export function similarity(ticket: Ticket, representative: Ticket): number {
  * Checks the ticket against every open incident's most recent ticket.
  * Returns the matched incident (joined) or a newly created one.
  */
-export function correlate(ticket: Ticket, allTickets: Ticket[]): { incident: Incident; matched: boolean; score: number } {
-  const openIncidents = listOpenIncidents();
+export async function correlate(
+  ticket: Ticket,
+  allTickets: Ticket[]
+): Promise<{ incident: Incident; matched: boolean; score: number }> {
+  const openIncidents = await listOpenIncidents();
 
   let best: { incident: Incident; score: number } | null = null;
 
@@ -64,7 +67,7 @@ export function correlate(ticket: Ticket, allTickets: Ticket[]): { incident: Inc
     }
   }
 
-  ledger.record({
+  await ledger.record({
     ticketId: ticket.id,
     type: "correlation_checked",
     actor: "correlation",
@@ -76,8 +79,8 @@ export function correlate(ticket: Ticket, allTickets: Ticket[]): { incident: Inc
 
   if (best && best.score >= SIMILARITY_THRESHOLD) {
     best.incident.ticketIds.push(ticket.id);
-    saveIncident(best.incident);
-    ledger.record({
+    await saveIncident(best.incident);
+    await ledger.record({
       ticketId: ticket.id,
       type: "correlation_linked",
       actor: "correlation",
@@ -90,15 +93,15 @@ export function correlate(ticket: Ticket, allTickets: Ticket[]): { incident: Inc
 
   const incident: Incident = {
     id: uuid(),
-    shortId: nextIncidentShortId(),
+    shortId: await nextIncidentShortId(),
     title: ticket.subject,
     ticketIds: [ticket.id],
     rootCause: null,
     status: "open",
     createdAt: new Date().toISOString(),
   };
-  saveIncident(incident);
-  ledger.record({
+  await saveIncident(incident);
+  await ledger.record({
     ticketId: ticket.id,
     type: "incident_created",
     actor: "correlation",

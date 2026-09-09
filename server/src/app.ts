@@ -4,6 +4,7 @@ import { ticketsRouter } from "./routes/tickets.routes";
 import { incidentsRouter } from "./routes/incidents.routes";
 import { ledgerRouter } from "./routes/ledger.routes";
 import { providerName } from "./services/groq";
+import { isSupabaseConfigured } from "./data/supabaseClient";
 
 export function createApp() {
   const app = express();
@@ -11,7 +12,7 @@ export function createApp() {
   app.use(express.json());
 
   app.get("/api/health", (_req, res) => {
-    res.json({ status: "ok", provider: providerName() });
+    res.json({ status: "ok", provider: providerName(), storage: isSupabaseConfigured() ? "supabase" : "not configured" });
   });
 
   app.use("/api/tickets", ticketsRouter);

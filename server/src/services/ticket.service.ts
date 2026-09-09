@@ -4,12 +4,12 @@ import { DiagnosticState, Ticket } from "../types/domain";
 import { bus } from "./bus";
 import * as ledger from "./ledger.service";
 
-export function createTicket(input: {
+export async function createTicket(input: {
   subject: string;
   customer: string;
   channel: Ticket["channel"];
   rawMessage: string;
-}): Ticket {
+}): Promise<Ticket> {
   const now = new Date().toISOString();
   const emptyState: DiagnosticState = {
     problem: input.subject,
@@ -23,7 +23,7 @@ export function createTicket(input: {
   };
   const ticket: Ticket = {
     id: uuid(),
-    shortId: nextTicketShortId(),
+    shortId: await nextTicketShortId(),
     subject: input.subject,
     customer: input.customer,
     channel: input.channel,
@@ -36,8 +36,8 @@ export function createTicket(input: {
     createdAt: now,
     updatedAt: now,
   };
-  saveTicket(ticket);
-  ledger.record({
+  await saveTicket(ticket);
+  await ledger.record({
     ticketId: ticket.id,
     type: "ticket_created",
     actor: "human",
@@ -47,12 +47,12 @@ export function createTicket(input: {
   return ticket;
 }
 
-export function update(ticketId: string, mutate: (t: Ticket) => void): Ticket {
-  const ticket = getTicket(ticketId);
+export async function update(ticketId: string, mutate: (t: Ticket) => void): Promise<Ticket> {
+  const ticket = await getTicket(ticketId);
   if (!ticket) throw new Error(`Ticket ${ticketId} not found`);
   mutate(ticket);
   ticket.updatedAt = new Date().toISOString();
-  saveTicket(ticket);
+  await saveTicket(ticket);
   bus.emit("ticket:updated", ticket);
   return ticket;
 }

@@ -2,14 +2,14 @@ import { appendLedgerEntry, getLedgerForTicket, getFullLedger, verifyLedgerInteg
 import { AgentRole, LedgerEventType } from "../types/domain";
 import { bus } from "./bus";
 
-export function record(input: {
+export async function record(input: {
   ticketId: string;
   type: LedgerEventType;
   actor: AgentRole;
   summary: string;
   detail?: Record<string, unknown>;
 }) {
-  const entry = appendLedgerEntry(input);
+  const entry = await appendLedgerEntry(input);
   bus.emit("ledger:entry", entry);
   return entry;
 }
