@@ -1,6 +1,11 @@
 import { Incident, LedgerEntry, Ticket } from "../types";
 
-const BASE = "/api";
+// In local dev, VITE_API_URL is unset and requests go to relative "/api",
+// which Vite's dev server proxies to the backend (see vite.config.ts). In a
+// deployed build, set VITE_API_URL to the backend's public URL at build time
+// (e.g. https://trace-server.onrender.com) so the static frontend knows
+// where to send requests — a static host has no proxy layer.
+const BASE = `${import.meta.env.VITE_API_URL ?? ""}/api`;
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
